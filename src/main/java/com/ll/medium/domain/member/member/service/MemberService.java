@@ -1,7 +1,7 @@
-package com.ll.medium.domain.member.memeber.service;
+package com.ll.medium.domain.member.member.service;
 
-import com.ll.medium.domain.member.memeber.entity.Member;
-import com.ll.medium.domain.member.memeber.repository.MemberRepository;
+import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.member.member.repository.MemberRepository;
 import com.ll.medium.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

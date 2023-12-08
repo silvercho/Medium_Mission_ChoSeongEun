@@ -1,7 +1,7 @@
-package com.ll.medium.domain.member.memeber.controller;
+package com.ll.medium.domain.member.member.controller;
 
-import com.ll.medium.domain.member.memeber.entity.Member;
-import com.ll.medium.domain.member.memeber.service.MemberService;
+import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.global.rq.rq.Rq;
 import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;

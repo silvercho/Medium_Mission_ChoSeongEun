@@ -1,4 +1,4 @@
-package com.ll.medium.domain.member.memeber.entity;
+package com.ll.medium.domain.member.member.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
