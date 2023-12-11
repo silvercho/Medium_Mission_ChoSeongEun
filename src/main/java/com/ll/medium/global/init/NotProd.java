@@ -14,6 +14,11 @@ public class NotProd {
     private final MemberService memberService;
     @Bean
     public ApplicationRunner initNotProd() {
-        return args -> log.debug("NotProd 실행됨");
+        return args -> {
+            memberService.join("system", "1234");
+            memberService.join("admin", "1234");
+            memberService.join("user1", "1234");
+            memberService.join("user2", "1234");
+        };
     }
 }
