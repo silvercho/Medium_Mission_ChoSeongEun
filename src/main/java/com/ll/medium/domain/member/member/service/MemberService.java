@@ -4,6 +4,7 @@ import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.repository.MemberRepository;
 import com.ll.medium.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public RsData<Member> join(String username, String password) {
@@ -25,7 +27,7 @@ public class MemberService {
             return  RsData.of("400-2", "이미 존재하는 회원입니다.");
         }
 
-        Member member = new Member(username, password);
+        Member member = new Member(username, passwordEncoder.encode(password));
 
         memberRepository.save(member);
 
