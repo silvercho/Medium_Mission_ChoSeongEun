@@ -3,7 +3,7 @@ package com.ll.medium.domain.post.post.controller;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.rq.Rq;
-import jakarta.servlet.http.HttpServletRequest;
+import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -73,7 +73,6 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/write")
     public String showWrite() {
-
         return "domain/post/post/write";
     }
 
@@ -87,10 +86,11 @@ public class PostController {
 
     @PostMapping("/write")
     @PreAuthorize("isAuthenticated()")
-    public String write(@ModelAttribute WriteForm writeForm, HttpServletRequest request){
-        Post post = postService.write(rq.getUser(), writeForm.title, writeForm.body );
+    public String write(
+            @Valid PostController.WriteForm writeForm){
+        RsData<Post> rsData = postService.write(rq.getUser(), writeForm.title, writeForm.body);
 
-        return rq.redirect("/", "게시물 생성되었습니다.");
+        return rq.redirectOrBack("/post/detail/%d".formatted(rsData.getData().getId()), rsData);
     }
 
 
