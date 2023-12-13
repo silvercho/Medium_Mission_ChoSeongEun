@@ -32,9 +32,9 @@ SPA : 리액트, 뷰 , 앵귤러 , 스벨트
 
 - [x] GET / : 홈
   - 최신글 30개 노출
-- [ ] GET /post/list : 전체 글 리스트
+- [x] GET /post/list : 전체 글 리스트
   - 공개된 글만 노출
-- [ ] GET /post/myList : 내 글 리스트
+- [x] GET /post/myList : 내 글 리스트
   - 내 글 목록 조회
 - [x] GET /post/1 : 1번 글 상세보기
 - [ ] GET /post/write : 글 작성 폼

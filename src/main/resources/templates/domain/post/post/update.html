@@ -1,0 +1,53 @@
+<html layout:decorate="~{global/usrLayout}">
+
+<head>
+    <title th:text="글쓰기"></title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <form method="POST" onsubmit="submitPost(this); return false;"
+          style="display: flex; flex-direction: column; gap:20px; max-width:500px;">
+        <input type="text" name="title" placeholder="제목">
+
+        <input type="text" name="body" placeholder="내용">
+
+        <button type="submit">
+            글쓰기
+        </button>
+    </form>
+    <div>
+        <button onclick="history.back();">뒤로가기</button>
+    </div>
+</div>
+<script>
+    function submitPost(form) {
+        // 폼에서 제목과 내용을 가져옵니다.
+        const inputTitle = form.title;
+        const inputBody = form.body;
+        // 입력값 양쪽의 공백을 제거합니다.
+        inputTitle.value = inputTitle.value.trim();
+        inputBody.value = inputBody.value.trim();
+        // 수정된 값을 변수에 저장합니다.
+        const title = inputTitle.value;
+        const body = inputBody.value;
+
+        if (title.length == 0) {
+            toastWarning('제목을 입력해주세요.');
+            inputTitle.focus(); // 커서를 제목 입력 필드로 이동합니다.
+
+            return;
+        }
+        if (body.length == 0) {
+            toastWarning('내용을 입력해주세요.');
+            inputBody.focus(); // 커서를 내용 입력 필드로 이동합니다.
+
+            return;
+        }
+        form.submit();
+    }
+</script>
+</body>
+
+</html>

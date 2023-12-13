@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Component
-@RequestScope
+@RequestScope // HTTP 요청마다 새로운 빈 인스턴스가 생성
 @RequiredArgsConstructor
 public class Rq {
     private final HttpServletRequest request;
