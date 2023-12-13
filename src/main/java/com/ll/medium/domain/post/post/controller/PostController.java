@@ -3,7 +3,6 @@ package com.ll.medium.domain.post.post.controller;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.rq.rq.Rq;
-import com.ll.medium.global.rsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -76,6 +75,13 @@ public class PostController {
         return "domain/post/post/write";
     }
 
+    @GetMapping("/detail/{id}")
+    String showDetail(Model model, @PathVariable long id) {
+        // PathVariable 을 사용하여 몇번 게시물을 보여줘야 할지 입력받음.
+        Post post = postService.findById(id).get();
+        model.addAttribute("post", post);
+        return "domain/post/post/detail";
+    }
     @Data
     public static class WriteForm {
         @NotBlank
@@ -84,21 +90,18 @@ public class PostController {
         private String body;
     }
 
-    @PostMapping("/write")
     @PreAuthorize("isAuthenticated()")
-    public String write(
-            @Valid PostController.WriteForm writeForm){
-        RsData<Post> rsData = postService.write(rq.getUser(), writeForm.title, writeForm.body);
-
-        return rq.redirectOrBack("/post/detail/%d".formatted(rsData.getData().getId()), rsData);
+    @PostMapping("/write")
+    String write(@Valid WriteForm writeForm) {
+        Post post = postService.write(writeForm.title, writeForm.body);
+        String msg = "id%d, article created".formatted(post.getId());
+        return rq.redirect("/article/list", "%d번 게시물 생성되었습니다.".formatted(post.getId()));
     }
-
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/update/{id}")
     public String updateForm(Model model, @PathVariable Long id) {
         Post post = postService.findById(id).get();
-
         model.addAttribute("post", post);
 
         return "domain/post/post/update";

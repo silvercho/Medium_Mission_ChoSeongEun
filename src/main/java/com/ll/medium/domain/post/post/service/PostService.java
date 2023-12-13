@@ -1,8 +1,8 @@
 package com.ll.medium.domain.post.post.service;
 
-import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,15 +17,14 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public void write(Member author, String title, String body, boolean isPublished) {
+    public Post write(String title, String body) {
         Post post = Post.builder()
-                .author(author)
                 .title(title)
                 .body(body)
-                .isPublished(isPublished)
                 .build();
 
         postRepository.save(post);
+        return post;
     }
     public Object findTop30ByIsPublishedOrderByIdDesc(boolean isPublished) {
         return
@@ -43,7 +42,11 @@ public class PostService {
     public Page<Post> findPostsByUsername(String username, String kw, Pageable pageable) {
         return postRepository.findByTitleContainingIgnoreCaseOrBodyContainingIgnoreCase(username, kw , pageable);
     }
-
+    @Transactional
+    public Optional<Post> update(Post post, @NotBlank String title, @NotBlank String body){
+        postRepository.save(post);
+        return findById(post.getId());
+    }
     @Transactional
     public void delete(Long id) {
         postRepository.deleteById(id);
