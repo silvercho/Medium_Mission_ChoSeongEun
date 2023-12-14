@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/post")
 @RequiredArgsConstructor
@@ -76,7 +78,7 @@ public class PostController {
     }
 
     @GetMapping("/detail/{id}")
-    String showDetail(Model model, @PathVariable long id) {
+    public String showDetail(Model model, @PathVariable long id) {
         // PathVariable 을 사용하여 몇번 게시물을 보여줘야 할지 입력받음.
         Post post = postService.findById(id).get();
         model.addAttribute("post", post);
@@ -92,10 +94,10 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
-    String write(@Valid WriteForm writeForm) {
-        Post post = postService.write(writeForm.title, writeForm.body);
-        String msg = "id%d, article created".formatted(post.getId());
-        return rq.redirect("/article/list", "%d번 게시물 생성되었습니다.".formatted(post.getId()));
+    public String write(@Valid WriteForm writeForm, Principal principal) {
+        Post post = postService.write(principal.getName(), writeForm.title, writeForm.body, true);
+
+        return rq.redirect("/post/list", "%d번 게시물 생성되었습니다.".formatted(post.getId()));
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -120,7 +122,7 @@ public class PostController {
 
         postService.update(post, updateForm.title, updateForm.body);
 
-        return rq.redirect("/", "%d번 게시물 수정되었습니다.".formatted(id));
+        return rq.redirect("domain/post/post/list", "%d번 게시물 수정되었습니다.".formatted(id));
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -129,6 +131,6 @@ public class PostController {
         Post post = postService.findById(id).get();
 
         postService.delete(post.getId());
-        return rq.redirect("/", "%d번 게시물 삭제되었습니다.".formatted(id));
+        return rq.redirect("domain/post/post/list", "%d번 게시물 삭제되었습니다.".formatted(id));
     }
 }

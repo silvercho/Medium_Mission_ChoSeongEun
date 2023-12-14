@@ -21,6 +21,7 @@ public class NotProd {
     private final MemberService memberService;
     private final PostService postService;
 
+
     @Bean
     @Order(3)
     public ApplicationRunner initNotProd() {
@@ -34,16 +35,17 @@ public class NotProd {
             Member memberUser4 = memberService.join("user4", "1234").getData();
 
 
-            postService.write("제목 1", "내용 1");
-            postService.write("제목 2", "내용 2");
-            postService.write("제목 3", "내용 3");
-            postService.write("제목 4", "내용 4");
+            postService.write("user1", "제목 1", "내용 1", true);
+            postService.write("user1", "제목 2", "내용 2", true);
+            postService.write("user1", "제목 3", "내용 3", true);
+            postService.write("user1", "제목 4", "내용 4", true);
 
-            postService.write("제목 5", "내용 5");
-            postService.write("제목 6", "내용 6");
+
+            postService.write("user1", "제목 5", "내용 5", true);
+            postService.write("user1", "제목 6", "내용 6", true);
 
             IntStream.rangeClosed(7, 50).forEach(i -> {
-                postService.write("제목 " + i, "내용 " + i);
+                postService.write("user1", "제목 " + i, "내용 " + i, true);
             });
 
         };

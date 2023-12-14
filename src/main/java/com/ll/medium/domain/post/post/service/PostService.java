@@ -1,5 +1,7 @@
 package com.ll.medium.domain.post.post.service;
 
+import com.ll.medium.domain.member.member.entity.Member;
+import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
 import jakarta.validation.constraints.NotBlank;
@@ -14,17 +16,22 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PostService {
+
     private final PostRepository postRepository;
+    private final MemberService memberService;
 
     @Transactional
-    public Post write(String title, String body) {
+    public Post write(String username, String title, String body, boolean isPublished) {
+        Member author = memberService.findByUsername(username).get();
+
         Post post = Post.builder()
+                .author(author)
                 .title(title)
                 .body(body)
+                .isPublished(isPublished)
                 .build();
 
-        postRepository.save(post);
-        return post;
+        return postRepository.save(post);
     }
     public Object findTop30ByIsPublishedOrderByIdDesc(boolean isPublished) {
         return
@@ -51,5 +58,6 @@ public class PostService {
     public void delete(Long id) {
         postRepository.deleteById(id);
     }
+
 
 }

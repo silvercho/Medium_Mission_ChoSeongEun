@@ -21,19 +21,20 @@ public class SecurityConfig {
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // url
+        // /member/... ->
+        // /adm/.. ->
+        // /adm/**
+        // /member/login
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/gen/**")
-                                .permitAll()
-                                .requestMatchers("/resource/**")
-                                .permitAll()
-                                .requestMatchers("/h2-console/**")
-                                .permitAll()
+                                .requestMatchers("/post/write")
+                                    .hasRole("MEMBER")
                                 .requestMatchers("/adm/**")
-                                .hasRole("ADMIN")
+                                    .hasRole("ADMIN")
                                 .anyRequest()
-                                .permitAll()
+                                    .permitAll()
                 )
                 .headers(
                         headers ->
