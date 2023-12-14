@@ -4,7 +4,6 @@ import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.repository.PostRepository;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,14 +49,23 @@ public class PostService {
         return postRepository.findByTitleContainingIgnoreCaseOrBodyContainingIgnoreCase(username, kw , pageable);
     }
     @Transactional
-    public Optional<Post> update(Post post, @NotBlank String title, @NotBlank String body){
-        postRepository.save(post);
-        return findById(post.getId());
+    public Post update(String username, String title, String body, boolean isPublished) {
+        Member author = memberService.findByUsername(username).get();
+
+        Post post = Post.builder()
+                .author(author)
+                .title(title)
+                .body(body)
+                .isPublished(isPublished)
+                .build();
+
+        return postRepository.save(post);
     }
     @Transactional
     public void delete(Long id) {
         postRepository.deleteById(id);
     }
+
 
 
 }

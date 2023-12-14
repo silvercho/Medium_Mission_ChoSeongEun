@@ -117,12 +117,10 @@ public class PostController {
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/update/{id}")
-    public String updateForm(Model model, @PathVariable Long id, @Valid UpdateForm updateForm) {
-        Post post = postService.findById(id).get();
+    public String updateForm(@PathVariable long id, @Valid UpdateForm updateForm , Principal principal) {
+        Post post = postService.update(principal.getName(),updateForm.title,updateForm.body,true);
 
-        postService.update(post, updateForm.title, updateForm.body);
-
-        return rq.redirect("domain/post/post/list", "%d번 게시물 수정되었습니다.".formatted(id));
+        return rq.redirect("domain/post/post/list", "%d번 게시물 수정되었습니다.".formatted(post.getId()));
     }
 
     @PreAuthorize("isAuthenticated()")
