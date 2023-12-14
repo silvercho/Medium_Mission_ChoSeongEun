@@ -102,7 +102,7 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/update/{id}")
-    public String updateForm(Model model, @PathVariable Long id) {
+    public String showUpdate(Model model, @PathVariable Long id) {
         Post post = postService.findById(id).get();
         model.addAttribute("post", post);
 
@@ -117,18 +117,16 @@ public class PostController {
     }
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/update/{id}")
-    public String updateForm(@PathVariable long id, @Valid UpdateForm updateForm , Principal principal) {
-        Post post = postService.update(principal.getName(),updateForm.title,updateForm.body,true);
+    public String update(@PathVariable String username, @Valid UpdateForm updateForm , Principal principal,@PathVariable Long id) {
+        Post post = postService.update(principal.getName(),updateForm.title,updateForm.body,true, id);
 
-        return rq.redirect("domain/post/post/list", "%d번 게시물 수정되었습니다.".formatted(post.getId()));
+        return rq.redirect("/post/list", "%d번 게시물 수정되었습니다.".formatted(post.getId()));
     }
 
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        Post post = postService.findById(id).get();
-
-        postService.delete(post.getId());
-        return rq.redirect("domain/post/post/list", "%d번 게시물 삭제되었습니다.".formatted(id));
+    @GetMapping("/delete/{id}")
+    public String delete(Principal principal, @PathVariable Long id) {
+        postService.deleteById(id);
+        return rq.redirect("/post/list", "%d번 게시물 삭제되었습니다.".formatted(id));
     }
 }

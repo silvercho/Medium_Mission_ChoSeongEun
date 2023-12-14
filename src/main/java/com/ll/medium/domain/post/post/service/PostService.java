@@ -49,23 +49,21 @@ public class PostService {
         return postRepository.findByTitleContainingIgnoreCaseOrBodyContainingIgnoreCase(username, kw , pageable);
     }
     @Transactional
-    public Post update(String username, String title, String body, boolean isPublished) {
-        Member author = memberService.findByUsername(username).get();
+    public Post update(String username, String title, String body, boolean isPublished, Long id)  {
+        Optional<Post> optionalPost = postRepository.findById(id);
 
-        Post post = Post.builder()
-                .author(author)
-                .title(title)
-                .body(body)
-                .isPublished(isPublished)
-                .build();
+        Member author = memberService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다: " + username));
+        Post post = optionalPost.get();
+
+        post.setTitle(title);
+        post.setBody(body);
+        post.setPublished(isPublished);
 
         return postRepository.save(post);
     }
     @Transactional
-    public void delete(Long id) {
-        postRepository.deleteById(id);
+    public void deleteById(Long id) {
+        Optional<Post> postOptional = postRepository.findById(id);
+        postOptional.ifPresent(postRepository::delete);
     }
-
-
-
 }

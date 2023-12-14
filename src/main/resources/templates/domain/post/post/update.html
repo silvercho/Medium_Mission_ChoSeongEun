@@ -7,7 +7,7 @@
 <body>
 
 <div layout:fragment="content">
-    <form method="POST" th:action="@{~/post/update}" onsubmit="submitPost(this); return false;"
+    <form method="POST" th:action="@{'/post/update/' + ${postId}}" onsubmit="submitPost(this); return false;"
           style="display: flex; flex-direction: column; gap:20px; max-width:500px;">
         <input type="text" name="title" placeholder="제목">
 

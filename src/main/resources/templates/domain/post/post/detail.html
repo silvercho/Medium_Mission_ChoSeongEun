@@ -26,7 +26,8 @@
     <div class="write_btn">
         <a href="/post/list">글 목록</a>
 
-        <a th:href="|/post/update/${post.id}|">글 수정</a>
+        <a th:href="|/post/update/${post.id}|" class="btn btn-sm btn-outline-secondary"
+           th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}">글 수정</a>
 
         <a th:href="|/post/delete/${post.id}|">글 삭제</a>
 
