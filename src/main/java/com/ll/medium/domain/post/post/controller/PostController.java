@@ -58,13 +58,11 @@ public class PostController {
             @RequestParam(defaultValue = "1") int page,
             Principal principal // 현재 로그인한 사용자 정보를 얻기 위한 Principal 객체
     ) {
-        String username = principal.getName(); // 현재 로그인한 사용자의 username 또는 id를 가져옴
-
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
 
-        Page<Post> postPage = postService.findPostsByUsername(username, kw, pageable);
+        Page<Post> postPage = postService.search(rq.getMember(), kw, pageable);
         rq.setAttribute("postPage", postPage);
         rq.setAttribute("page", page);
 

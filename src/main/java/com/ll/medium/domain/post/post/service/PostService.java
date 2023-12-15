@@ -42,11 +42,15 @@ public class PostService {
     }
 
     public Page<Post> search(String kw, Pageable pageable) {
-        return postRepository.findByTitleContainingIgnoreCaseOrBodyContainingIgnoreCase(kw, kw, pageable);
+        return postRepository.findByIsPublishedAndTitleContainingIgnoreCaseOrBodyContainingIgnoreCase(true, kw,true, kw, pageable);
+    }
+
+    public Page<Post> search(Member author, String kw, Pageable pageable) {
+        return postRepository.findByAuthorAndTitleContainingIgnoreCaseOrAuthorAndBodyContainingIgnoreCase(author, kw, author, kw, pageable);
     }
 
     public Page<Post> findPostsByUsername(String username, String kw, Pageable pageable) {
-        return postRepository.findByTitleContainingIgnoreCaseOrBodyContainingIgnoreCase(username, kw , pageable);
+        return postRepository.findByIsPublishedAndTitleContainingIgnoreCaseOrBodyContainingIgnoreCase(true, username,true, kw , pageable);
     }
     @Transactional
     public Post update(String username, String title, String body, boolean isPublished, Long id)  {
