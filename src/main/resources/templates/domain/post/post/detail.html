@@ -12,6 +12,11 @@
     </div>
 
     <div>
+        <h3>추천수</h3>
+        <div th:text="${#numbers.formatInteger(post.likes.size, 3, 'COMMA')}"></div>
+    </div>
+
+    <div>
         <h3>공개여부</h3>
         <div th:text="${post.published ? '공개' : '비공개'}"></div>
     </div>
@@ -27,6 +32,17 @@
     <div>
         <button onclick="history.back();">뒤로가기</button>
         <a th:if="${@postService.canModify(@rq.member, post)}" th:href="|/post/${post.id}/modify|">글 수정</a>
+
+        <a th:if="${@postService.canLike(@rq.member, post)}"
+           th:href="|/post/${post.id}/like|" method="POST">
+            추천
+        </a>
+
+        <a th:if="${@postService.canCancelLike(@rq.member, post)}"
+           th:href="|/post/${post.id}/cancelLike|" method="DELETE">
+            추천취소
+        </a>
+
         <form style="display: contents"
               th:if="${@postService.canDelete(@rq.member, post)}"
               th:action="|/post/${post.id}/delete|"
