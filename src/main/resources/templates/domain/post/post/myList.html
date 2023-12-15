@@ -1,14 +1,13 @@
 <html layout:decorate="~{global/usrLayout}">
 
 <head>
-  <title th:text="|글 목록|"></title>
-
+  <title th:text="|내글 목록|"></title>
 </head>
 
 <body>
 
 <div layout:fragment="content">
-  <h1>내 글 목록</h1>
+  <h1>내글 목록</h1>
 
   <ul>
     <li th:each="post : ${postPage.content}">

@@ -64,16 +64,11 @@ public class PostController {
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
 
-        Page<Post> postPage = postService.search(rq.getMember(), kw, pageable);
+        Page<Post> postPage = postService.search(rq.getMember(),null, kw, pageable);
         rq.setAttribute("postPage", postPage);
         rq.setAttribute("page", page);
 
         return "domain/post/post/myList";
-    }
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/write")
-    public String showWrite() {
-        return "domain/post/post/write";
     }
 
     @Getter
@@ -85,7 +80,11 @@ public class PostController {
         private String body;
         private boolean isPublished;
     }
-
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/write")
+    public String showWrite() {
+        return "domain/post/post/write";
+    }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
