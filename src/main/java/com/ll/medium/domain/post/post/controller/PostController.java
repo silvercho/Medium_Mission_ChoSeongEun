@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,11 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @Controller
 @RequestMapping("/post")
 @RequiredArgsConstructor
@@ -33,10 +30,15 @@ public class PostController {
 
     @GetMapping("/{id}")
     public String showDetail(@PathVariable long id) {
-        rq.setAttribute("post", postService.findById(id).get());
+        Post post = postService.findById(id).orElseThrow(() -> new GlobalException("404-1", "해당 글이 존재하지 않습니다."));
+
+        postService.increaseHit(post);
+
+        rq.setAttribute("post", post);
 
         return "domain/post/post/detail";
     }
+
     @GetMapping("/list")
     public String showList(
             @RequestParam(defaultValue = "") String kw,
@@ -57,18 +59,23 @@ public class PostController {
     @GetMapping("/myList")
     public String showMyList(
             @RequestParam(defaultValue = "") String kw,
-            @RequestParam(defaultValue = "1") int page,
-            Principal principal // 현재 로그인한 사용자 정보를 얻기 위한 Principal 객체
+            @RequestParam(defaultValue = "1") int page
     ) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("id"));
         Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(sorts));
 
-        Page<Post> postPage = postService.search(rq.getMember(),null, kw, pageable);
+        Page<Post> postPage = postService.search(rq.getMember(), null, kw, pageable);
         rq.setAttribute("postPage", postPage);
         rq.setAttribute("page", page);
 
         return "domain/post/post/myList";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/write")
+    public String showWrite() {
+        return "domain/post/post/write";
     }
 
     @Getter
@@ -80,26 +87,15 @@ public class PostController {
         private String body;
         private boolean isPublished;
     }
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/write")
-    public String showWrite() {
-        return "domain/post/post/write";
-    }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
-    public String write(@Valid WriteForm writeForm) {
-        Post post =postService.write(rq.getMember(), writeForm.getTitle(), writeForm.getBody(), writeForm.isPublished());
+    public String write(@Valid WriteForm form) {
+        Post post = postService.write(rq.getMember(), form.getTitle(), form.getBody(), form.isPublished());
 
-        return rq.redirect("/post/"+ post.getId(), post.getId() + "번 게시물 생성되었습니다.");
+        return rq.redirect("/post/" + post.getId(), post.getId() + "번 글이 작성되었습니다.");
     }
-    @GetMapping("/detail/{id}")
-    public String showDetail(Model model, @PathVariable long id) {
-        // PathVariable 을 사용하여 몇번 게시물을 보여줘야 할지 입력받음.
-        Post post = postService.findById(id).get();
-        model.addAttribute("post", post);
-        return "domain/post/post/detail";
-    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/modify")
     public String showModify(@PathVariable long id, Model model) {
@@ -133,6 +129,7 @@ public class PostController {
 
         return rq.redirect("/post/" + post.getId(), post.getId() + "번 글이 수정되었습니다.");
     }
+
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}/delete")
     public String delete(@PathVariable long id) {
