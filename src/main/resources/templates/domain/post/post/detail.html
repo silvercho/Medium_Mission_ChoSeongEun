@@ -8,6 +8,10 @@
 
 <div layout:fragment="content">
     <h1>글 내용</h1>
+    <div>
+        <h3>공개여부</h3>
+        <div th:text="${post.published ? '공개' : '비공개'}"></div>
+    </div>
 
     <div>
         <h3>제목</h3>
@@ -22,15 +26,25 @@
 
     <div>
         <button onclick="history.back();">뒤로가기</button>
-    </div>
-    <div class="write_btn">
-        <a href="/post/list">글 목록</a>
+        <a th:if="${@postService.canModify(@rq.member, post)}" th:href="|/post/${post.id}/modify|">글 수정</a>
 
-        <a th:href="|/post/update/${post.id}|" class="btn btn-sm btn-outline-secondary"
-           th:if="${post.author != null and #authentication.getPrincipal().getUsername() == post.author.username}">글 수정</a>
+        <form style="display: contents"
+              th:if="${@postService.canDelete(@rq.member, post)}"
+              th:action="|/post/${post.id}/delete|"
+              method="POST"
+        >
+            <input type="hidden" name="_method" value="DELETE">
+            <button onclick="return confirm('정말로 삭제하시겠습니까?');">글 삭제</button>
+        </form>
 
-        <a th:href="|/post/delete/${post.id}|">글 삭제</a>
-
+        <a
+                th:if="${@postService.canDelete(@rq.member, post)}"
+                th:href="|/post/${post.id}/delete|"
+                method="DELETE"
+                onclick="return confirm('정말로 삭제하시겠습니까?');"
+        >
+            글 삭제
+        </a>
     </div>
 </div>
 

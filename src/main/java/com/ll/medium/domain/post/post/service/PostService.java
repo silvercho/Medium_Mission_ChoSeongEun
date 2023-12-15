@@ -20,8 +20,7 @@ public class PostService {
     private final MemberService memberService;
 
     @Transactional
-    public Post write(String username, String title, String body, boolean isPublished) {
-        Member author = memberService.findByUsername(username).get();
+    public Post write(Member author, String title, String body, boolean isPublished) {
 
         Post post = Post.builder()
                 .author(author)
@@ -42,32 +41,27 @@ public class PostService {
     }
 
     public Page<Post> search(String kw, Pageable pageable) {
-        return postRepository.findByIsPublishedAndTitleContainingIgnoreCaseOrBodyContainingIgnoreCase(true, kw,true, kw, pageable);
+        return postRepository.search(true, kw, pageable);
     }
 
     public Page<Post> search(Member author, String kw, Pageable pageable) {
-        return postRepository.findByAuthorAndTitleContainingIgnoreCaseOrAuthorAndBodyContainingIgnoreCase(author, kw, author, kw, pageable);
+        return postRepository.search(author, kw, pageable);
     }
 
-    public Page<Post> findPostsByUsername(String username, String kw, Pageable pageable) {
-        return postRepository.findByIsPublishedAndTitleContainingIgnoreCaseOrBodyContainingIgnoreCase(true, username,true, kw , pageable);
+    public boolean canModify(Member actor, Post post) {
+        return actor.equals(post.getAuthor());
     }
+
     @Transactional
-    public Post update(String username, String title, String body, boolean isPublished, Long id)  {
-        Optional<Post> optionalPost = postRepository.findById(id);
-
-        Member author = memberService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다: " + username));
-        Post post = optionalPost.get();
-
+    public void modify(Post post, String title, String body, boolean published) {
         post.setTitle(title);
         post.setBody(body);
-        post.setPublished(isPublished);
-
-        return postRepository.save(post);
+        post.setPublished(published);
     }
-    @Transactional
-    public void deleteById(Long id) {
-        Optional<Post> postOptional = postRepository.findById(id);
-        postOptional.ifPresent(postRepository::delete);
+
+    public boolean canDelete(Member actor, Post post) {
+        if ( actor.isAdmin() ) return true;
+
+        return actor.equals(post.getAuthor());
     }
 }

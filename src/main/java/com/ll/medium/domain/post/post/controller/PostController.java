@@ -2,11 +2,13 @@ package com.ll.medium.domain.post.post.controller;
 
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
+import com.ll.medium.global.exceptions.GlobalException;
 import com.ll.medium.global.rq.rq.Rq;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,13 +70,30 @@ public class PostController {
 
         return "domain/post/post/myList";
     }
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/write")
     public String showWrite() {
         return "domain/post/post/write";
     }
 
+    @Getter
+    @Setter
+    public static class WriteForm {
+        @NotBlank
+        private String title;
+        @NotBlank
+        private String body;
+        private boolean isPublished;
+    }
+
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/write")
+    public String write(@Valid WriteForm writeForm) {
+        Post post =postService.write(rq.getMember(), writeForm.getTitle(), writeForm.getBody(), writeForm.isPublished());
+
+        return rq.redirect("/post/"+ post.getId(), post.getId() + "번 게시물 생성되었습니다.");
+    }
     @GetMapping("/detail/{id}")
     public String showDetail(Model model, @PathVariable long id) {
         // PathVariable 을 사용하여 몇번 게시물을 보여줘야 할지 입력받음.
@@ -82,49 +101,48 @@ public class PostController {
         model.addAttribute("post", post);
         return "domain/post/post/detail";
     }
-    @Data
-    public static class WriteForm {
-        @NotBlank
-        private String title;
-        @NotBlank
-        private String body;
-    }
-
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/write")
-    public String write(@Valid WriteForm writeForm, Principal principal) {
-        Post post = postService.write(principal.getName(), writeForm.title, writeForm.body, true);
+    @GetMapping("/{id}/modify")
+    public String showModify(@PathVariable long id, Model model) {
+        Post post = postService.findById(id).orElseThrow(() -> new GlobalException("404-1", "해당 글이 존재하지 않습니다."));
 
-        return rq.redirect("/post/list", "%d번 게시물 생성되었습니다.".formatted(post.getId()));
-    }
+        if (!postService.canModify(rq.getMember(), post)) throw new GlobalException("403-1", "권한이 없습니다.");
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/update/{id}")
-    public String showUpdate(Model model, @PathVariable Long id) {
-        Post post = postService.findById(id).get();
         model.addAttribute("post", post);
 
-        return "domain/post/post/update";
+        return "domain/post/post/modify";
     }
-    @Data
-    public static class UpdateForm {
+
+    @Getter
+    @Setter
+    public static class ModifyForm {
         @NotBlank
         private String title;
         @NotBlank
         private String body;
-    }
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/update/{id}")
-    public String update(@PathVariable String username, @Valid UpdateForm updateForm , Principal principal,@PathVariable Long id) {
-        Post post = postService.update(principal.getName(),updateForm.title,updateForm.body,true, id);
-
-        return rq.redirect("/post/list", "%d번 게시물 수정되었습니다.".formatted(post.getId()));
+        private boolean isPublished;
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/delete/{id}")
-    public String delete(Principal principal, @PathVariable Long id) {
-        postService.deleteById(id);
-        return rq.redirect("/post/list", "%d번 게시물 삭제되었습니다.".formatted(id));
+    @PutMapping("/{id}/modify")
+    public String modify(@PathVariable long id, @Valid ModifyForm form) {
+        Post post = postService.findById(id).orElseThrow(() -> new GlobalException("404-1", "해당 글이 존재하지 않습니다."));
+
+        if (!postService.canModify(rq.getMember(), post)) throw new GlobalException("403-1", "권한이 없습니다.");
+
+        postService.modify(post, form.getTitle(), form.getBody(), form.isPublished());
+
+        return rq.redirect("/post/" + post.getId(), post.getId() + "번 글이 수정되었습니다.");
+    }
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{id}/delete")
+    public String delete(@PathVariable long id) {
+        Post post = postService.findById(id).orElseThrow(() -> new GlobalException("404-1", "해당 글이 존재하지 않습니다."));
+
+        if (!postService.canDelete(rq.getMember(), post)) throw new GlobalException("403-1", "권한이 없습니다.");
+
+        postService.delete(post);
+
+        return rq.redirect("/post/list", post.getId() + "번 글이 삭제되었습니다.");
     }
 }
