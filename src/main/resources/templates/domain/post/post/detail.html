@@ -60,6 +60,13 @@
             글 삭제
         </a>
     </div>
+    <th:block th:if="${@rq.login}">
+        <h3>댓글 작성</h3>
+        <form th:action="|/post/${post.id}/comment/write|" method="POST">
+            <textarea name="body" cols="30" rows="10" required maxlength="10000" placeholder="댓글"></textarea>
+            <button>댓글 작성</button>
+        </form>
+    </th:block>
 </div>
 </body>
 </html>
