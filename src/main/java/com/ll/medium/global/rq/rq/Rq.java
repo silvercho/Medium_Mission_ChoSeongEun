@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Component
-@RequestScope // HTTP 요청마다 새로운 빈 인스턴스가 생성
+@RequestScope
 @RequiredArgsConstructor
 public class Rq {
     private final HttpServletRequest request;
@@ -49,24 +49,28 @@ public class Rq {
 
         return sb.toString();
     }
+
     public String historyBack(String msg) {
         request.setAttribute("failMsg", msg);
 
         return "global/js";
     }
+
     public String redirectOrBack(RsData<?> rs, String path) {
         if (rs.isFail()) return historyBack(rs.getMsg());
 
         return redirect(path, rs.getMsg());
     }
-    public SecurityUser getUser () {
+
+    public SecurityUser getUser() {
         return Optional.ofNullable(SecurityContextHolder.getContext())
                 .map(SecurityContext::getAuthentication)
                 .map(Authentication::getPrincipal)
-                .filter(it -> it instanceof SecurityUser )
-                .map(it -> (SecurityUser ) it)
+                .filter(it -> it instanceof SecurityUser)
+                .map(it -> (SecurityUser) it)
                 .orElse(null);
     }
+
     public boolean isLogin() {
         return getUser() != null;
     }
@@ -83,9 +87,11 @@ public class Rq {
                 .stream()
                 .anyMatch(it -> it.getAuthority().equals("ROLE_ADMIN"));
     }
+
     public void setAttribute(String key, Object value) {
         request.setAttribute(key, value);
     }
+
     public String getCurrentQueryStringWithoutParam(String paramName) {
         String queryString = request.getQueryString();
 
@@ -97,14 +103,14 @@ public class Rq {
 
         return queryString;
     }
-    public Member getMember() {
-        if ( isLogout() ) return null;
 
-        if ( member == null ) {
+    public Member getMember() {
+        if (isLogout()) return null;
+
+        if (member == null) {
             member = entityManager.getReference(Member.class, getUser().getId());
         }
 
         return member;
     }
-
 }

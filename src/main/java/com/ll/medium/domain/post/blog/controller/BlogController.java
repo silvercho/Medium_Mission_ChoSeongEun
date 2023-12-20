@@ -48,6 +48,8 @@ public class BlogController {
 
         return "domain/post/blog/list";
     }
+
+    @GetMapping("/{username}/{id}")
     public String showList(
             @PathVariable String username,
             @PathVariable long id

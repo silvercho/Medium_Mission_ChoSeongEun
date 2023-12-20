@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
-
     private final Rq rq;
     private final PostService postService;
 

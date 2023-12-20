@@ -1,4 +1,4 @@
-package com.ll.medium.domain.post.post.postLike.entity;
+package com.ll.medium.domain.post.postLike.entity;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.post.entity.Post;
