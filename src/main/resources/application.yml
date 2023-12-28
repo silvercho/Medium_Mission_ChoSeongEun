@@ -34,6 +34,22 @@ logging:
     org.hibernate.orm.jdbc.bind: TRACE
     org.hibernate.orm.jdbc.extract: TRACE
     org.springframework.transaction.interceptor: TRACE
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            clientId: ON_SECRET
+            scope: profile_nickname, profile_image
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 custom:
   site:
     name: medium
@@ -41,3 +57,7 @@ custom:
   tempDirPath: c:/temp/medium_dev/temp
   genFile:
     dirPath: c:/temp/medium_dev
+  tossPayments:
+    widget:
+      clientKey: test_ck_Gv6LjeKD8aBe4GYawP0x3wYxAdXy
+      secretKey: ON_SECRET
