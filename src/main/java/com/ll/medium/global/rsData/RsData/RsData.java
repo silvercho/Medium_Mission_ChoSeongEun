@@ -1,4 +1,4 @@
-package com.ll.medium.global.rsData;
+package com.ll.medium.global.rsData.RsData;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

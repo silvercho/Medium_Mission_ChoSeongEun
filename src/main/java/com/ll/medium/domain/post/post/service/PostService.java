@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,6 +37,13 @@ public class PostService {
         return postRepository.findTop30ByIsPublishedOrderByIdDesc(isPublished);
     }
 
+    public List<Post> findByIsPublished(boolean isPublished) {
+        return postRepository.findByIsPublishedOrderByIdDesc(isPublished);
+    }
+
+    public List<Post> findByAuthor(Member author) {
+        return postRepository.findByAuthorOrderByIdDesc(author);
+    }
     public Optional<Post> findById(long id) {
         return postRepository.findById(id);
     }

@@ -3,7 +3,7 @@ package com.ll.medium.domain.post.post.entity;
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.post.postComment.entity.PostComment;
 import com.ll.medium.domain.post.postLike.entity.PostLike;
-import com.ll.medium.global.jpa.BaseEntity;
+import com.ll.medium.global.jpa.BaseTime.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,12 +14,12 @@ import static jakarta.persistence.CascadeType.ALL;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
-@NoArgsConstructor(access = PROTECTED)
-@AllArgsConstructor(access = PROTECTED)
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-public class Post extends BaseEntity {
+public class Post extends BaseTime {
     @OneToMany(mappedBy = "post", cascade = ALL, orphanRemoval = true)
     @Builder.Default
     private List<PostLike> likes = new ArrayList<>();

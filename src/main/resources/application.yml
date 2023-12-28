@@ -1,3 +1,5 @@
+server:
+  port: 8090
 spring:
   profiles:
     active: dev
@@ -51,10 +53,25 @@ logging:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 custom:
+  dev:
+    cookieDomain: localhost
+    frontUrl: "http://${custom.dev.cookieDomain}:5173"
+    backUrl: "http://${custom.dev.cookieDomain}:${server.port}"
+    production:
+      cookieDomain: medium.oa.gg
+      frontUrl: "https://${custom.production.cookieDomain}"
+      backUrl: "https://api.${custom.production.cookieDomain}"
   site:
+    cookieDomain: "${custom.dev.cookieDomain}"
+    frontUrl: "${custom.dev.frontUrl}"
+    backUrl: "${custom.dev.backUrl}"
     name: medium
-    baseUrl: "http://localhost:${server.port}"
-  tempDirPath: c:/temp/medium_dev/temp
+  jwt:
+    secretKey: ON_SECRET
+    accessToken:
+      expirationSec: '#{60*60}'
+    temp:
+      dirPath: c:/temp/medium_dev/temp
   genFile:
     dirPath: c:/temp/medium_dev
   tossPayments:

@@ -5,7 +5,7 @@ import com.ll.medium.domain.member.member.service.MemberService;
 import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.global.exceptions.GlobalException;
-import com.ll.medium.global.rq.rq.Rq;
+import com.ll.medium.global.rq.Rq.Rq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

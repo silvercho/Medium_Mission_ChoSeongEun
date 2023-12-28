@@ -4,7 +4,7 @@ import com.ll.medium.domain.post.post.entity.Post;
 import com.ll.medium.domain.post.post.service.PostService;
 import com.ll.medium.domain.post.postComment.entity.PostComment;
 import com.ll.medium.global.exceptions.GlobalException;
-import com.ll.medium.global.rq.rq.Rq;
+import com.ll.medium.global.rq.Rq.Rq;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
