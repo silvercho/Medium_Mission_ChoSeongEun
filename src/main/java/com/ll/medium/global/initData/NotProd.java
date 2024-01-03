@@ -1,4 +1,4 @@
-package com.ll.medium.global.init;
+package com.ll.medium.global.initData;
 
 import com.ll.medium.domain.member.member.entity.Member;
 import com.ll.medium.domain.member.member.service.MemberService;
@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 public class NotProd {
     @Autowired
     @Lazy
-    private NotProd self;
+    private com.ll.medium.global.init.NotProd self;
     private final MemberService memberService;
     private final PostService postService;
 

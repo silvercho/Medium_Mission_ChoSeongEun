@@ -1,5 +1,4 @@
-package com.ll.medium.global.init;
-
+package com.ll.medium.global.initData;
 import com.ll.medium.domain.member.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
