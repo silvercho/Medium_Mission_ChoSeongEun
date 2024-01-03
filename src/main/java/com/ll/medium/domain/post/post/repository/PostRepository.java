@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
-    List<Post> findTop30ByIsPublishedOrderByIdDesc(boolean isPublished);
+    List<Post> findTop30ByPublishedOrderByIdDesc(boolean isPublished);
 
-    List<Post> findByIsPublishedOrderByIdDesc(boolean isPublished);
+    <T> List<T> findByPublishedOrderByIdDesc(boolean isPublished, Class<T> type);
 
-    List<Post> findByAuthorOrderByIdDesc(Member author);
+    <T> List<T> findByAuthorOrderByIdDesc(Member author, Class<T> type);
 }

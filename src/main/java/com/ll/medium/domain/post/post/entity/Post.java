@@ -34,7 +34,7 @@ public class Post extends BaseTime {
     private String title;
     @Column(columnDefinition = "TEXT")
     private String body;
-    private boolean isPublished;
+    private boolean published;
     @Setter(PROTECTED)
     private long hit;
 

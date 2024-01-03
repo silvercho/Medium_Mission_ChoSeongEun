@@ -27,22 +27,22 @@ public class PostService {
                 .author(author)
                 .title(title)
                 .body(body)
-                .isPublished(isPublished)
+                .published(isPublished)
                 .build();
 
         return postRepository.save(post);
     }
 
-    public Object findTop30ByIsPublishedOrderByIdDesc(boolean isPublished) {
-        return postRepository.findTop30ByIsPublishedOrderByIdDesc(isPublished);
+    public Object findTop30ByPublishedOrderByIdDesc(boolean isPublished) {
+        return postRepository.findTop30ByPublishedOrderByIdDesc(isPublished);
     }
 
-    public List<Post> findByIsPublished(boolean isPublished) {
-        return postRepository.findByIsPublishedOrderByIdDesc(isPublished);
+    public <T> List<T> findByPublished(boolean isPublished, Class<T> type) {
+        return postRepository.findByPublishedOrderByIdDesc(isPublished, type);
     }
 
-    public List<Post> findByAuthor(Member author) {
-        return postRepository.findByAuthorOrderByIdDesc(author);
+    public <T> List<T> findByAuthor(Member author, Class<T> type) {
+        return postRepository.findByAuthorOrderByIdDesc(author, type);
     }
     public Optional<Post> findById(long id) {
         return postRepository.findById(id);
