@@ -51,7 +51,6 @@ class Rq {
             }
         };
     }
-
     public apiEndPoints() {
         return createClient<paths>({
             baseUrl: import.meta.env.VITE_CORE_API_BASE_URL,
@@ -149,14 +148,6 @@ class Rq {
         $effect(() => {
             fn();
         });
-    }
-
-    public getKakaoLoginUrl() {
-        return `${
-            import.meta.env.VITE_CORE_API_BASE_URL
-        }/member/socialLogin/kakao?redirectUrl=${encodeURIComponent(
-            import.meta.env.VITE_CORE_FRONT_BASE_URL
-        )}`;
     }
 }
 
