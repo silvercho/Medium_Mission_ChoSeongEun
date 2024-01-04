@@ -27,3 +27,14 @@
   - 특정 회원의 글 모아보기
 - [x] GET /b/user1/3 : 회원 user1 의 글 중에서 3번글 상세보기
 
+
+# 1. Member 클래스에 `private boolean isPaid` 필드를 추가 
+# 2. Post 클래스에 `private boolean isPaid` 필드를 추가 
+# 3. NotProd 에서 유료멤버십 회원(샘플데이터) 와 유료글(샘플데이터) 100개 생성
+
+## 카카오 로그인 / 토스 페이먼츠 yml 연결(secret code)
+- [x] 카카오 로그인 
+- [x] 토스페이먼츠
+
+## 토스트 UI 에디터 적용
+- [ ] 마크다운 에디터 
