@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Controller
@@ -41,13 +42,16 @@ public class MemberController {
         private String username;
         @NotBlank
         private String password;
+        @NotBlank
+        private String nickname;
+        private MultipartFile profileImg;
     }
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     @Operation(summary = "가입 폼 처리")
     public String signup(@Valid JoinForm joinForm) {
-        RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword());
+        RsData<Member> joinRs = memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getNickname(), joinForm.getProfileImg());
 
         return rq.redirectOrBack(joinRs, "/member/login");
     }

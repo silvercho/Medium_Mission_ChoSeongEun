@@ -83,7 +83,6 @@ public class GenFileService {
         file.getParentFile().mkdirs();
 
         Ut.file.moveFile(sourceFile, String.valueOf(file));
-        Ut.file.remove(sourceFile);
 
         return genFile;
     }

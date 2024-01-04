@@ -32,6 +32,7 @@ public class Member extends BaseEntity {
     private LocalDateTime modifyDate;
     private String username;
     private String password;
+    private String nickname;
     private boolean isPaid;
     @Column(unique = true)
     private String refreshToken;

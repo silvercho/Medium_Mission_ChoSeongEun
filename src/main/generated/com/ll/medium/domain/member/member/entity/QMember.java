@@ -34,6 +34,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final DateTimePath<java.time.LocalDateTime> modifyDate = createDateTime("modifyDate", java.time.LocalDateTime.class);
 
+    public final StringPath nickname = createString("nickname");
+
     public final BooleanPath paid = createBoolean("paid");
 
     public final StringPath password = createString("password");

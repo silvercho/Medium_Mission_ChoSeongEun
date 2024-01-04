@@ -24,8 +24,6 @@ public class All {
         return args -> {
             if (memberService.findByUsername("system").isPresent()) return;
 
-            memberService.join("system", "1234");
-            memberService.join("admin", "1234");
         };
     }
     @Transactional
