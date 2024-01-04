@@ -1,5 +1,6 @@
 package com.ll.medium.global.jpa;
 
+import com.ll.medium.standard.util.Ut.Ut;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -19,4 +20,8 @@ public class BaseEntity extends IdEntity {
     private LocalDateTime createDate;
     @LastModifiedDate
     private LocalDateTime modifyDate;
+
+    public String getModelName() {
+        return Ut.str.lcfirst(this.getClass().getSimpleName());
+    }
 }

@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 public class NotProd {
     @Autowired
     @Lazy
-    private com.ll.medium.global.init.NotProd self;
+    private com.ll.medium.global.initData.NotProd self;
     private final MemberService memberService;
     private final PostService postService;
 

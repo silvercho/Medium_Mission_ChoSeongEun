@@ -61,9 +61,8 @@ public class SecurityConfig {
                                                 StandardCharsets.UTF_8))
                 )
                 .oauth2Login(
-                        oauth2Login ->
-                                oauth2Login
-                                        .successHandler(customAuthenticationSuccessHandler)
+                        oauth2Login -> oauth2Login
+                                .loginPage("/member/login")
                 )
                 .logout(
                         logout ->

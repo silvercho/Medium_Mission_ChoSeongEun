@@ -17,6 +17,10 @@ export interface paths {
         /** 글 리스트 */
         get: operations["getItems"];
     };
+    "/api/v1/posts/{id}": {
+        /** 글 */
+        get: operations["getItem"];
+    };
     "/api/v1/posts/mine": {
         /** 내 글 리스트 */
         get: operations["getMine"];

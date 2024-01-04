@@ -28,6 +28,15 @@
         <h3>내용</h3>
         <div style="white-space: pre-wrap;" th:text="${post.body}"></div>
     </div>
+    <div th:if="${isPaidMember}">
+        <!-- 유료멤버십 회원이면 해당 글 표시 -->
+        <h3>내용</h3>
+        <div style="white-space: pre-wrap;" th:text="${post.body}"></div>
+    </div>
+    <div th:unless="${isPaidMember}">
+        <!-- 유료멤버십 회원이 아닌 경우에는 다른 내용 표시 -->
+        <p>이 글은 유료멤버십전용입니다.</p>
+    </div>
     <hr>
     <div>
         <button onclick="history.back();">뒤로가기</button>

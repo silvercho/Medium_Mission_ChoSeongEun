@@ -34,9 +34,13 @@ public class Post extends BaseTime {
     private String title;
     @Column(columnDefinition = "TEXT")
     private String body;
-    private boolean published;
+
+    private boolean publishStatus;
+
     @Setter(PROTECTED)
     private long hit;
+
+    private boolean isPaid;
 
     public void increaseHit() {
         hit++;
@@ -72,5 +76,11 @@ public class Post extends BaseTime {
         comments.add(postComment);
 
         return postComment;
+    }
+
+    // ROLE_PAID 권한이 있으면서 isPaid가 false이면 해당 글을 볼 수 없도록 설정
+    public boolean canAccess(Member member) {
+        return member.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_PAID")) && isPaid;
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import static com.ll.medium.domain.post.post.entity.QPost.post;
 
+
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
@@ -24,7 +25,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
         // 조건 생성
         BooleanExpression condition = post
-                .isPublished.eq(isPublished);
+                .publishStatus.eq(isPublished);
 
         if (kw != null && !kw.isBlank()) {
             condition = condition.and(
@@ -64,7 +65,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
         if (isPublished != null) {
             condition = condition.and(
-                    post.isPublished.eq(isPublished)
+                    post.publishStatus.eq(isPublished)
             );
         }
 

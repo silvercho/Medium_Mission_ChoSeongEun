@@ -16,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,14 +35,26 @@ public class PostController {
 
     @GetMapping("/{id}")
     @Operation(summary = "글 상세")
-    public String showDetail(@PathVariable long id) {
+    public String showDetail(@PathVariable long id, Model model) {
         Post post = postService.findById(id).orElseThrow(() -> new GlobalException("404-1", "해당 글이 존재하지 않습니다."));
 
-        postService.increaseHit(post);
+        boolean isUserPaid = isUserPaidMember();
 
-        rq.setAttribute("post", post);
-
+        if (post.isPaid() && !isUserPaid) {
+            model.addAttribute("isPaidMember", false); // 유료멤버십 확인 정보 전달
+        } else {
+            model.addAttribute("isPaidMember", true); // 유료멤버십 확인 정보 전달
+            postService.increaseHit(post);
+            model.addAttribute("post", post);
+        }
         return "domain/post/post/detail";
+    }
+    private boolean isUserPaidMember() {
+        // 실제로는 유료 멤버십 여부를 확인하는 로직이 필요합니다.
+        // 여기서는 간단하게 ROLE_PAID 권한을 가진 사용자라고 가정합니다.
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_PAID"));
     }
 
     @GetMapping("/list")
